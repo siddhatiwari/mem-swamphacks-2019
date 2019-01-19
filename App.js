@@ -96,6 +96,7 @@ export default class App extends React.Component {ß
 
   render() {
     const { faces, previewPaused } = this.state; 
+    var prevFace = null;
     return (
       <View style={styles.container} >
         <Camera
@@ -110,7 +111,8 @@ export default class App extends React.Component {ß
         </Camera>
         <View style={styles.faceContainer}>
         {faces.map((face, index) => {
-          if (!previewPaused) {
+          if (!previewPaused && index == 0 || (prevFace.bounds.size.width * prevFace.bounds.size.height) < (face.bounds.size.width  * face.bounds.size.height)) {
+            prevFace = face;
             return (
               <FaceComponent key={index} face={face}/>
             )
