@@ -56,6 +56,8 @@ export default class App extends React.Component {ß
       this.camera.pausePreview()
       this.setState({previewPaused: true})
       let photo = await takeSnapshotAsync(this.camera, {format: 'jpg', quality: 1}).catch(e => console.log(e))
+      //let croppedPhoto = await ImageManipulator.manipulate(photo, { crop: {} })
+
     }
   }
 
@@ -96,7 +98,18 @@ export default class App extends React.Component {ß
 
   render() {
     const { faces, previewPaused } = this.state; 
-    var prevFace = null;
+    let faceIndex;
+    if (faces.length > 0) {
+      let maxArea = 0;
+      for(let i = 0; i < faces.length; i++) {
+        const { width, height } = faces[i].bounds.size;
+        let area = width * height;
+        if (area > maxArea) {
+          faceIndex = i;
+          maxArea = area;
+        }
+      }
+    }
     return (
       <View style={styles.container} >
         <Camera
@@ -110,14 +123,17 @@ export default class App extends React.Component {ß
             runClassifications: FaceDetector.Constants.Classifications.none}}>
         </Camera>
         <View style={styles.faceContainer}>
-        {faces.map((face, index) => {
-          if (!previewPaused && index == 0 || (prevFace.bounds.size.width * prevFace.bounds.size.height) < (face.bounds.size.width  * face.bounds.size.height)) {
+        {/* {faces.map((face, index) => {
+          if (!previewPaused && (index == 0 || (prevFace.bounds.size.width * prevFace.bounds.size.height) < (face.bounds.size.width  * face.bounds.size.height))) {
             prevFace = face;
             return (
               <FaceComponent key={index} face={face}/>
             )
           }
-          })}
+          })} */}
+          {!previewPaused && faceIndex >= 0 && 
+            <FaceComponent face={faces[faceIndex]}/>
+          }
         </View>
         {this._handleDisplayCancelButton()}
         {this._handleDisplayUploadButton()}
