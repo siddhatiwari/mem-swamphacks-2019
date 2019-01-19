@@ -15,18 +15,29 @@ const FaceComponent = face => {
   return (
       <View>
         {/* Face dot map */}
-        <View style={[styles.faceDot, {top: rightEyePosition.y,left: rightEyePosition.x}]}></View>
-        <View style={[styles.faceDot, {top: leftEyePosition.y,left: leftEyePosition.x}]}></View>
-        <View style={[styles.faceDot, {top: rightEarPosition.y,left: rightEarPosition.x}]}></View>
-        <View style={[styles.faceDot, {top: leftEarPosition.y,left: leftEarPosition.x}]}></View>
-        <View style={[styles.faceDot, {top: mouthPosition.y,left: mouthPosition.x}]}></View>
-        <View style={[styles.faceDot, {top: leftMouthPosition.y,left: leftMouthPosition.x}]}></View>
-        <View style={[styles.faceDot, {top: rightMouthPosition.y,left: rightMouthPosition.x}]}></View>
-        <View style={[styles.faceDot, {top: noseBasePosition.y,left: noseBasePosition.x}]}></View>
-        <View style={[styles.faceDot, {top: leftCheekPosition.y,left: leftCheekPosition.x}]}></View>
-        <View style={[styles.faceDot, {top: rightCheekPosition.y,left: rightCheekPosition.x}]}></View>
+        <View style={[styles.faceDot, {top: rightEyePosition.y,left: rightEyePosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: leftEyePosition.y,left: leftEyePosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: rightEarPosition.y,left: rightEarPosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: leftEarPosition.y,left: leftEarPosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: mouthPosition.y,left: mouthPosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: leftMouthPosition.y,left: leftMouthPosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: rightMouthPosition.y,left: rightMouthPosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: noseBasePosition.y,left: noseBasePosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: leftCheekPosition.y,left: leftCheekPosition.x}]}>
+        </View>
+        <View style={[styles.faceDot, {top: rightCheekPosition.y,left: rightCheekPosition.x}]}>
+        </View>
         {/* Face rect */}
-        <View style = {[styles.faceRect, {top: bounds.origin.y, left: bounds.origin.x, width: bounds.size.width, height: bounds.size.height, transform:[{rotate:  `${rollAngle} deg`}]}]}></View>
+        <View style = {[styles.faceRect, {top: bounds.origin.y, left: bounds.origin.x, width: bounds.size.width, height: bounds.size.height, transform:[{rotate:  `${rollAngle} deg`}]}]}>
+        </View>
       </View>
   )
 };
@@ -44,7 +55,7 @@ export default class App extends React.Component {ß
       // let photo = await this.camera.takePictureAsync({quality: 0.3})
       this.camera.pausePreview()
       this.setState({previewPaused: true})
-      let photo = await takeSnapshotAsync(this.camera, {format: 'jpeg', quality: 1}).catch(e => console.log(e))
+      let photo = await takeSnapshotAsync(this.camera, {format: 'jpg', quality: 1}).catch(e => console.log(e))
     }
   }
 
@@ -57,6 +68,30 @@ export default class App extends React.Component {ß
 
   _handleFaceDetection = ({ faces }) => {
     this.setState({ faces: faces })
+  }
+
+  _handleDisplayCancelButton = () => {
+    const { previewPaused } = this.state;
+    if (previewPaused) {
+      return (
+        <View style={[styles.buttonContainer, {left: 20}]}>
+          <Text style={styles.buttonText} onPress={this._resumePreview}>X
+          </Text>
+        </View>
+      )
+    }
+  }
+
+  _handleDisplayUploadButton = () => {
+    const { previewPaused } = this.state;
+    if (previewPaused) {
+      return (
+        <View style={[styles.buttonContainer, {right: 20}]}>
+          <Text style={styles.buttonText} onPress={this._resumePreview}>Ok
+          </Text>
+        </View>
+      )
+    }
   }
 
   render() {
@@ -75,20 +110,17 @@ export default class App extends React.Component {ß
         </Camera>
         <View style={styles.faceContainer}>
         {faces.map((face, index) => {
+          if (!previewPaused) {
             return (
               <FaceComponent key={index} face={face}/>
             )
+          }
           })}
         </View>
+        {this._handleDisplayCancelButton()}
+        {this._handleDisplayUploadButton()}
         <TouchableOpacity style = {styles.cameraButton} onPress = {this._takePicture}>
         </TouchableOpacity>
-        {previewPaused
-          ? <TouchableOpacity style={styles.closeButton} onPress = {this._resumePreview}>
-            <Text>X</Text>
-          </TouchableOpacity>
-          : console.log('no')
-        }
-
       </View>
     );
   }

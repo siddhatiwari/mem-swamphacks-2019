@@ -30,24 +30,32 @@ const styles = StyleSheet.create({
     },
     faceDot: {
       position: 'absolute',
-      height:6,
-      width:6,
-      borderRadius: 3,
-      backgroundColor:'white'
+      height:2,
+      width:2,
+      borderRadius: 1,
+      backgroundColor:'orange'
     },
     faceRect: {
       position: 'absolute',
       backgroundColor: 'transparent',
       borderRadius: 5,
-      borderWidth: 5,
-      borderColor: 'white'
+      borderWidth: 2,
+      borderColor: 'orange'
     },
-    closeButton: {
+    buttonContainer: {
       position: 'absolute',
-      backgroundColor: 'blue',
-      width: 50,
+      backgroundColor: 'transparent',
+      width: 100,
       height: 50,
-      left: 0
+      bottom: 20,
+      alignItems: 'center'
+    },
+    buttonText: {
+      position: 'absolute',
+      bottom: 20,
+      color: 'white',
+      fontSize: 48,
+      fontWeight: 'bold'
     }
   });
 
