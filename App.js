@@ -47,8 +47,9 @@ export default class App extends React.Component {
     super(props)
     Asset.fromModule(require('./assets/zucc.jpg')).downloadAsync()
     this.showFaceAnimation = new Animated.ValueXY({ x: windowWidth / 2 - 150, y: windowHeight - 10 })
-    this.showCameraButtonAnimation = new Animated.ValueXY({ x: windowWidth / 2 - 40, y: windowHeight - 65 })
-    this.showZuccButtonAnimation = new Animated.Value(20);
+    this.showCameraButtonAnimation = new Animated.ValueXY({ x: windowWidth / 2 - 40, y: windowHeight })
+    this.showZuccButtonAnimation = new Animated.Value(1);
+    this.showZUccDataAnimation = new Animated.Value(0);
   }
 
   state = {
@@ -86,7 +87,6 @@ export default class App extends React.Component {
     if (this.camera && !previewPaused && faces.length > 0) {
       this.setState({ isFetchingUser: true })
       let photo = await this.camera.takePictureAsync({quality: 0.3,base64:true})
-      //onsole.log(p)
       //let d = await FileSystem.readAsStringAsync(photo.uri)
       this.camera.pausePreview()
       this.setState({previewPaused: true})
@@ -128,7 +128,14 @@ export default class App extends React.Component {
   }
 
   _handleModalPress = () => {
-    this.setState({ personData: null, previewPaused: false, showingZuccData: false })
+    this.setState({ personData: null, previewPaused: false, showingZuccData: false }, () => {
+      Animated.spring(this.showZuccButtonAnimation, {
+        toValue: 1,
+      }).start()
+      Animated.spring(this.showZUccDataAnimation, {
+        toValue: 0,
+      }).start()
+    })
     if (this.camera) this.camera.resumePreview();
   }
 
@@ -154,8 +161,11 @@ export default class App extends React.Component {
 
   _handleZuccPress = () => {
     this.setState({ showingZuccData: true }, () => {
-      Animated.spring(this.showingZuccData, {
-        toValue: 50,
+      Animated.spring(this.showZUccDataAnimation, {
+        toValue: 90,
+      }).start()
+      Animated.spring(this.showZuccButtonAnimation, {
+        toValue: 0,
       }).start()
     })
   }
@@ -179,7 +189,7 @@ export default class App extends React.Component {
         }
       }
     }
-
+    
     return (
       <View style={styles.container} >
         <StatusBar hidden={true}/>
@@ -207,25 +217,29 @@ export default class App extends React.Component {
               <TouchableOpacity style={[styles.cameraButton,{flex:1}]} onPress = {() => this._takePicture(faceIndex)}/>
             </Animated.View>
         </Camera>
-
+        <Image source={require('./assets/MemText.png')} style={{position:'absolute',top:10,right:windowWidth/2-50,height:50,width:100,opacity:0.7}} resizeMode='contain'/>
         <Modal visible={personData !== null && personData !== 'error'} transparent={true} animationType='fade'>
           {previewPaused && personData &&
             <View style={{alignItems:'center',justifyContent:'center',height:'100%',backgroundColor:'rgba(0,0,0,0.5)'}} >
               <View style={styles.card}>
                 <Text style={styles.cardNameText}>{personData.name}</Text>
                 <Image source={{uri:personData.instagramPicUrl}} style={styles.cardProfilePicture} />
-                <Text style={styles.cardSocialText}>IG: @{personData.instagramLink}</Text>
-                {showingZuccData && 
-                  <View style={{alignItems:'center',width:300,backgroundColor:'#3b5998',paddingTop:10,paddingBottom:10}}>
-                    <Text style={styles.zuccDataText}>{personData.phoneNumber}</Text>
-                    <Text style={styles.zuccDataText}>{personData.email}</Text>
-                    <Text style={styles.zuccDataText}>Single ❤️</Text>
-                  </View>
+                {personData.instagramLink !== '' 
+                  ? <Text style={styles.cardSocialText}>IG: @{personData.instagramLink}</Text>
+                  : <Text style={styles.cardSocialText}>IG not found.</Text>
                 }
+                <Animated.View style={{alignItems:'center',justifyContent:'center',width:300,backgroundColor:'#3b5998',height:this.showZUccDataAnimation,marginBottom:5}}>
+                  {personData.phoneNumber && <Text style={styles.zuccDataText}>{personData.phoneNumber}</Text>}
+                  {personData.email && <Text style={styles.zuccDataText}>{personData.email}</Text>}
+                  <Text style={styles.zuccDataText}>Single ❤️</Text>
+                </Animated.View>
+                
                 <View>
-                  <TouchableOpacity style={[styles.cardButton, {marginBottom: 10}]} onPress={() => this._openInstagram(personData.instagramLink)}>
-                    <Text style={styles.cardButtonText}>Follow</Text>
-                  </TouchableOpacity>
+                  {personData.instagramLink !== '' &&
+                    <TouchableOpacity style={[styles.cardButton, {marginBottom: 10}]} onPress={() => this._openInstagram(personData.instagramLink)}>
+                      <Text style={styles.cardButtonText}>Follow</Text>
+                    </TouchableOpacity>
+                  }
                   <TouchableOpacity style={styles.cardButton} onPress={this._handleModalPress}>
                     <Text style={styles.cardButtonText}>Close</Text>
                   </TouchableOpacity>
@@ -233,12 +247,12 @@ export default class App extends React.Component {
               </View>
 
               
-                <Animated.View style={[{width:200,height:60},{marginTop:this.showZuccButtonAnimation}]}>
-                  <TouchableOpacity style={styles.zuccButton} onPress={this._handleZuccPress}>
-                    <Image source={require('./assets/zucc.jpg')} style={styles.zuccFace}></Image>
-                    <Text style={styles.zuccButtonText}>Zucc 👀</Text>
-                  </TouchableOpacity>
-                </Animated.View>
+              <Animated.View style={{width:200,height:60,opacity:this.showZuccButtonAnimation}}>
+                <TouchableOpacity style={styles.zuccButton} onPress={this._handleZuccPress}>
+                  <Image source={require('./assets/zucc.jpg')} style={styles.zuccFace}></Image>
+                  <Text style={styles.zuccButtonText}>Zucc 👀</Text>
+                </TouchableOpacity>
+              </Animated.View>
               
             </View>
           }

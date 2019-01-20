@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
       padding: 20,
       paddingTop: 40,
       width: 300,
-      height: 500,
+      height: 520,
       borderRadius: 15,
       alignItems: 'center',
       justifyContent: 'space-between'
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
       borderRadius: 22.5
     },
     zuccButton: {
+      marginTop: 20,
       backgroundColor: '#3b5998',
       width: 200,
       height: 60,
