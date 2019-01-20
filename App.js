@@ -11,7 +11,6 @@ const windowHeight = dimensions.height;
 
 const FaceComponent = face => {
   const { bounds, rightEyePosition, leftEyePosition, rightEarPosition, leftEarPosition, mouthPosition, leftMouthPosition, rightMouthPosition, noseBasePosition, leftCheekPosition, rightCheekPosition, rollAngle } = face.face;
-  console.log(rightEyePosition)
   return (
       <View>
         {/* Face dot map */}
@@ -49,15 +48,20 @@ export default class App extends React.Component {ß
     previewPaused: false
   }
 
-  _takePicture = async () => {
-    const { previewPaused } = this.state;
+  _takePicture = async faceIndex => {
+    const { previewPaused, faces } = this.state;
     if (this.camera && !previewPaused) {
-      // let photo = await this.camera.takePictureAsync({quality: 0.3})
+      let photo = await this.camera.takePictureAsync({quality: 0.3})
+      //onsole.log(p)
       this.camera.pausePreview()
       this.setState({previewPaused: true})
-      let photo = await takeSnapshotAsync(this.camera, {format: 'jpg', quality: 1}).catch(e => console.log(e))
-      //let croppedPhoto = await ImageManipulator.manipulate(photo, { crop: {} })
-
+      //let photo = await takeSnapshotAsync(this.camera, {format: 'jpg', quality: 1}).catch(e => console.log(e))
+      let face = faces[faceIndex]
+      //console.log(face)
+      const { x, y } = face.bounds.origin
+      const { width, height } = face.bounds.size
+      //console.log('file://'+photo.substring(8))
+      let croppedPhoto = await ImageManipulator.manipulateAsync(photo.uri, [ {crop: {originX: x, originY: y, width: width, height: height}} ])
     }
   }
 
@@ -137,7 +141,7 @@ export default class App extends React.Component {ß
         </View>
         {this._handleDisplayCancelButton()}
         {this._handleDisplayUploadButton()}
-        <TouchableOpacity style = {styles.cameraButton} onPress = {this._takePicture}>
+        <TouchableOpacity style = {styles.cameraButton} onPress = {() => this._takePicture(faceIndex)}>
         </TouchableOpacity>
       </View>
     );
