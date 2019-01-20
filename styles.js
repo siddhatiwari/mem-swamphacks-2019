@@ -11,10 +11,15 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    cameraContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: windowHeight,
+      width: windowWidth,
+    },  
     cameraButton: {
       position: 'absolute',
       backgroundColor: 'transparent',
-      bottom: 50, 
       width: 80,
       height: 80,
       borderRadius: 40,
@@ -56,6 +61,100 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 48,
       fontWeight: 'bold'
+    },
+    card: {
+      backgroundColor: 'white',
+      padding: 20,
+      paddingTop: 40,
+      width: 300,
+      height: 500,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    cardNameText: {
+      fontFamily: 'AvenirNext-Bold',
+      fontSize: 24
+    },
+    cardSocialText: {
+      fontFamily: 'AvenirNext-Regular',
+      fontSize: 17
+    },
+    cardButton: {
+      backgroundColor: 'purple',
+      width: 200,
+      height: 60,
+      borderRadius: 30,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    cardProfilePicture: {
+      backgroundColor: 'gray',
+      width: 150,
+      height: 150,
+      borderRadius: 75,
+    },
+    cardButtonText: {
+      fontFamily: 'AvenirNext-Bold',
+      fontSize: 17,
+      color: 'white'
+    },
+    cardTitleText: {
+      fontFamily: 'AvenirNext-Bold',
+      fontSize: 30
+    },
+    cardBodyText: {
+      fontFamily: 'AvenirNext-Regular',
+      fontSize: 17,
+      textAlign: 'center'
+    },
+    pointToPerson: {
+      fontFamily: 'Avenir Next',
+      fontWeight: '600',
+      fontSize: 17,
+      color: 'black',
+      alignItems: 'center'
+    },
+    pointToPersonContainer: {
+      position:'absolute',
+      backgroundColor: 'white',
+      padding: 20,
+      width: 300,
+      height: 60,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    zuccFace: {
+      backgroundColor: 'purple',
+      width: 45,
+      height: 45,
+      borderRadius: 22.5
+    },
+    zuccButton: {
+      backgroundColor: '#3b5998',
+      width: 200,
+      height: 60,
+      borderRadius: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      shadowOffset:{  width: 0,  height: 10,  },
+      shadowColor: 'rgba(0,0,0,0.5)',
+      shadowOpacity: 1.0,
+      shadowRadius: 15
+    },
+    zuccButtonText: {
+      color: 'white',
+      fontFamily: 'AvenirNext-Bold',
+      fontSize: 17,
+      marginLeft: 15
+    },
+    zuccDataText: {
+      color: 'white',
+      fontFamily: 'Avenir Next',
+      fontWeight: '500',
+      fontSize: 17,
     }
   });
 
